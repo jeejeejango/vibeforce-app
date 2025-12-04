@@ -8,6 +8,7 @@ import {
   updateTask,
 } from "../services/firestore";
 import { generateTasksFromNaturalLanguage } from "../services/geminiService"; // Import the new service function
+import { useTheme } from "../ThemeContext";
 
 interface CheckmateProps {
   user: UserProfile;
@@ -20,6 +21,7 @@ const Checkmate: React.FC<CheckmateProps> = ({
   todoLists,
   setTodoLists,
 }) => {
+  const { theme } = useTheme();
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
   const [newListName, setNewListName] = useState("");
   const [newTaskTitle, setNewTaskTitle] = useState("");
@@ -132,11 +134,11 @@ const Checkmate: React.FC<CheckmateProps> = ({
       prev.map((list) =>
         list.id === selectedListId
           ? {
-              ...list,
-              tasks: list.tasks.map((t) =>
-                t.id === taskId ? { ...t, status: newStatus } : t
-              ),
-            }
+            ...list,
+            tasks: list.tasks.map((t) =>
+              t.id === taskId ? { ...t, status: newStatus } : t
+            ),
+          }
           : list
       )
     );
@@ -160,14 +162,14 @@ const Checkmate: React.FC<CheckmateProps> = ({
     <div className="p-6 max-w-7xl mx-auto flex gap-6">
       {/* TodoList Sidebar */}
       <div className="w-1/4">
-        <h3 className="text-xl font-bold mb-4">Todo Lists</h3>
+        <h3 className={`text-xl font-bold mb-4 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Todo Lists</h3>
         <form onSubmit={handleAddTodoList} className="mb-4">
           <input
             type="text"
             value={newListName}
             onChange={(e) => setNewListName(e.target.value)}
             placeholder="New list name"
-            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 mb-2"
+            className={`w-full border rounded-lg p-2 mb-2 ${theme === 'light' ? 'bg-white border-gray-300 text-gray-900' : 'bg-slate-900 border-slate-700 text-white'}`}
           />
           <button
             type="submit"
@@ -180,11 +182,10 @@ const Checkmate: React.FC<CheckmateProps> = ({
           {todoLists.map((list) => (
             <li
               key={list.id}
-              className={`flex justify-between items-center cursor-pointer p-2 rounded-lg ${
-                selectedListId === list.id
+              className={`flex justify-between items-center cursor-pointer p-2 rounded-lg ${selectedListId === list.id
                   ? "bg-violet-600"
-                  : "hover:bg-slate-800"
-              }`}
+                  : theme === 'light' ? 'hover:bg-gray-100' : "hover:bg-slate-800"
+                }`}
             >
               <span
                 onClick={() => setSelectedListId(list.id)}
@@ -219,7 +220,7 @@ const Checkmate: React.FC<CheckmateProps> = ({
       <div className="w-3/4">
         {selectedList ? (
           <>
-            <h2 className="text-3xl font-bold mb-4">{selectedList.name}</h2>
+            <h2 className={`text-3xl font-bold mb-4 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{selectedList.name}</h2>
             <div className="mb-8 relative flex gap-2">
               <input
                 type="text"
@@ -230,10 +231,10 @@ const Checkmate: React.FC<CheckmateProps> = ({
                     ? "Generating tasks..."
                     : "What's your next move? Or describe tasks to generate..."
                 }
-                className="flex-grow bg-slate-900 border border-slate-700 text-white rounded-xl p-4 pl-12 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all shadow-lg shadow-black/20"
+                className={`flex-grow border rounded-xl p-4 pl-12 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all shadow-lg ${theme === 'light' ? 'bg-white border-gray-300 text-gray-900 shadow-gray-200' : 'bg-slate-900 border-slate-700 text-white shadow-black/20'}`}
                 disabled={isGeneratingTasks}
               />
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
+              <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${theme === 'light' ? 'text-gray-400' : 'text-slate-500'}`}>
                 <svg
                   className="w-6 h-6"
                   fill="none"
@@ -269,25 +270,23 @@ const Checkmate: React.FC<CheckmateProps> = ({
               {selectedList.tasks.map((task) => (
                 <div
                   key={task.id}
-                  className="group flex items-center gap-4 bg-slate-800/50 hover:bg-slate-800 border border-slate-700 p-4 rounded-xl transition-all"
+                  className={`group flex items-center gap-4 p-4 rounded-xl transition-all border ${theme === 'light' ? 'bg-gray-50 border-gray-200 hover:bg-gray-100' : 'bg-slate-800/50 hover:bg-slate-800 border-slate-700'}`}
                 >
                   <button onClick={() => handleToggleStatus(task.id)}>
                     <div
-                      className={`w-6 h-6 rounded-full border-2 ${
-                        task.status === "done"
-                          ? "bg-emerald-500 border-emerald-500"
-                          : "border-slate-500"
-                      }`}
+                      className={`w-6 h-6 rounded-full border-2 ${task.status === "done"
+                        ? "bg-emerald-500 border-emerald-500"
+                        : "border-slate-500"
+                        }`}
                     >
                       {task.status === "done" && "✓"}
                     </div>
                   </button>
                   <span
-                    className={`flex-1 ${
-                      task.status === "done"
-                        ? "line-through text-slate-500"
-                        : ""
-                    }`}
+                    className={`flex-1 ${task.status === "done"
+                        ? theme === 'light' ? "line-through text-gray-400" : "line-through text-slate-500"
+                        : theme === 'light' ? 'text-gray-900' : 'text-white'
+                      }`}
                   >
                     {task.title}
                   </span>
@@ -314,7 +313,7 @@ const Checkmate: React.FC<CheckmateProps> = ({
             </div>
           </>
         ) : (
-          <div className="text-center py-20 text-slate-600">
+          <div className={`text-center py-20 ${theme === 'light' ? 'text-gray-500' : 'text-slate-600'}`}>
             <p className="text-xl">
               Select a list or create a new one to get started.
             </p>

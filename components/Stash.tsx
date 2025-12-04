@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { StashItem, UserProfile } from "../types";
 import { analyzeStashItem } from "../services/geminiService";
 import { addStashItem, deleteStashItem } from "../services/firestore";
+import { useTheme } from "../ThemeContext";
 
 interface StashProps {
   user: UserProfile;
@@ -10,6 +11,7 @@ interface StashProps {
 }
 
 const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
+  const { theme } = useTheme();
   const [content, setContent] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -88,10 +90,10 @@ const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
     <div className="p-6 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h2 className="text-3xl font-bold text-white flex items-center gap-2">
+          <h2 className={`text-3xl font-bold flex items-center gap-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
             <span className="text-amber-400">❖</span> Stash
           </h2>
-          <p className="text-slate-400 mt-1">Intelligent Resource Vault</p>
+          <p className={`mt-1 ${theme === 'light' ? 'text-gray-600' : 'text-slate-400'}`}>Intelligent Resource Vault</p>
         </div>
       </div>
 
@@ -102,7 +104,7 @@ const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Paste a link, a note, or a code snippet here. AI will organize it."
-              className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-4 pr-32 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all shadow-lg min-h-[100px] resize-none"
+              className={`w-full border rounded-xl p-4 pr-32 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all shadow-lg min-h-[100px] resize-none ${theme === 'light' ? 'bg-white border-gray-300 text-gray-900' : 'bg-slate-900 border-slate-700 text-white'}`}
             />
             <div className="absolute bottom-4 right-4 flex items-center gap-2">
               {isAnalyzing && (
@@ -124,9 +126,9 @@ const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
 
       {/* Tag Search & Filter Section */}
       {allTags.length > 0 && (
-        <div className="mb-6 bg-slate-900/50 border border-slate-800 rounded-xl p-5">
+        <div className={`mb-6 rounded-xl p-5 border ${theme === 'light' ? 'bg-white border-gray-200' : 'bg-slate-900/50 border-slate-800'}`}>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider">
+            <h3 className={`text-sm font-semibold uppercase tracking-wider ${theme === 'light' ? 'text-gray-600' : 'text-slate-300'}`}>
               Filter by Tags
             </h3>
             {selectedTags.length > 0 && (
@@ -149,7 +151,7 @@ const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
               value={tagSearch}
               onChange={(e) => setTagSearch(e.target.value)}
               placeholder="Search tags..."
-              className="w-full bg-slate-800 border border-slate-700 text-white rounded-lg px-4 py-2 pl-10 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all"
+              className={`w-full border rounded-lg px-4 py-2 pl-10 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all ${theme === 'light' ? 'bg-white border-gray-300 text-gray-900' : 'bg-slate-800 border-slate-700 text-white'}`}
             />
             <svg
               className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"
@@ -172,7 +174,7 @@ const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
                   onClick={() => toggleTag(tag)}
                   className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-all transform hover:scale-105 ${isSelected
                     ? "bg-amber-600 text-white shadow-lg shadow-amber-900/50"
-                    : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                    : theme === 'light' ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300' : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
                     }`}
                 >
                   #{tag}
@@ -220,7 +222,7 @@ const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
         {filteredItems.map((item) => (
           <div
             key={item.id}
-            className="bg-slate-800 border border-slate-700 rounded-xl p-5 hover:border-amber-500/50 transition-colors flex flex-col h-full group"
+            className={`border rounded-xl p-5 transition-colors flex flex-col h-full group ${theme === 'light' ? 'bg-white border-gray-200 hover:border-amber-400' : 'bg-slate-800 border-slate-700 hover:border-amber-500/50'}`}
           >
             <div className="flex justify-between items-start mb-3">
               <span
@@ -254,13 +256,13 @@ const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
             </div>
 
             <h3
-              className="font-bold text-slate-100 text-lg mb-2 line-clamp-1"
+              className={`font-bold text-lg mb-2 line-clamp-1 ${theme === 'light' ? 'text-gray-900' : 'text-slate-100'}`}
               title={item.title}
             >
               {item.title}
             </h3>
 
-            <p className="text-slate-400 text-sm mb-4 flex-grow line-clamp-10">
+            <p className={`text-sm mb-4 flex-grow line-clamp-10 ${theme === 'light' ? 'text-gray-600' : 'text-slate-400'}`}>
               {item.aiSummary || item.content}
             </p>
 
@@ -279,7 +281,7 @@ const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
               {item.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="text-xs text-slate-400 bg-slate-900 px-2 py-1 rounded-md border border-slate-700"
+                  className={`text-xs px-2 py-1 rounded-md border ${theme === 'light' ? 'text-gray-600 bg-gray-100 border-gray-300' : 'text-slate-400 bg-slate-900 border-slate-700'}`}
                 >
                   #{tag}
                 </span>
@@ -288,7 +290,7 @@ const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
           </div>
         ))}
         {filteredItems.length === 0 && (
-          <div className="col-span-full py-12 text-center border-2 border-dashed border-slate-800 rounded-xl text-slate-600">
+          <div className={`col-span-full py-12 text-center border-2 border-dashed rounded-xl ${theme === 'light' ? 'border-gray-300 text-gray-500' : 'border-slate-800 text-slate-600'}`}>
             {selectedTags.length > 0 ? (
               <>
                 <p className="mb-2">No items match the selected tags.</p>
