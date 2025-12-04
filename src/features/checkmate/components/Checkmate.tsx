@@ -1,14 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { TodoList, Task, UserProfile } from "../types";
-import {
-  addTodoList,
-  deleteTodoList,
-  addTask,
-  deleteTask,
-  updateTask,
-} from "../services/firestore";
-import { generateTasksFromNaturalLanguage } from "../services/geminiService"; // Import the new service function
-import { useTheme } from "../ThemeContext";
+import React, { useState, useEffect } from 'react';
+import { UserProfile, TodoList, Task } from '../../../shared/types';
+import { addTodoList, deleteTodoList, updateTodoList, addTask, updateTask, deleteTask } from '../services/checkmateService';
+import { useTheme } from '../../../shared/ThemeContext';
+import { generateTasksFromNaturalLanguage } from '../../../shared/services/geminiService';
 
 interface CheckmateProps {
   user: UserProfile;
@@ -183,8 +177,8 @@ const Checkmate: React.FC<CheckmateProps> = ({
             <li
               key={list.id}
               className={`flex justify-between items-center cursor-pointer p-2 rounded-lg ${selectedListId === list.id
-                  ? "bg-violet-600"
-                  : theme === 'light' ? 'hover:bg-gray-100' : "hover:bg-slate-800"
+                ? "bg-violet-600"
+                : theme === 'light' ? 'hover:bg-gray-100' : "hover:bg-slate-800"
                 }`}
             >
               <span
@@ -284,8 +278,8 @@ const Checkmate: React.FC<CheckmateProps> = ({
                   </button>
                   <span
                     className={`flex-1 ${task.status === "done"
-                        ? theme === 'light' ? "line-through text-gray-400" : "line-through text-slate-500"
-                        : theme === 'light' ? 'text-gray-900' : 'text-white'
+                      ? theme === 'light' ? "line-through text-gray-400" : "line-through text-slate-500"
+                      : theme === 'light' ? 'text-gray-900' : 'text-white'
                       }`}
                   >
                     {task.title}

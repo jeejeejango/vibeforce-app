@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { TodoList, FocusSession, UserProfile } from '../types';
-import { useTheme } from '../ThemeContext';
+import { UserProfile, TodoList } from '../../../shared/types';
+import { useTheme } from '../../../shared/ThemeContext';
 
 interface FocusProps {
     user: UserProfile;
@@ -104,10 +104,10 @@ const Focus: React.FC<FocusProps> = ({ user, todoLists }) => {
                                 onClick={() => setSessionType('work')}
                                 disabled={isRunning}
                                 className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all ${sessionType === 'work'
-                                        ? 'bg-blue-600 text-white shadow-lg'
-                                        : theme === 'light'
-                                            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                                    ? 'bg-blue-600 text-white shadow-lg'
+                                    : theme === 'light'
+                                        ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                                     } disabled:opacity-50`}
                             >
                                 Work (25m)
@@ -116,10 +116,10 @@ const Focus: React.FC<FocusProps> = ({ user, todoLists }) => {
                                 onClick={() => setSessionType('short-break')}
                                 disabled={isRunning}
                                 className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all ${sessionType === 'short-break'
-                                        ? 'bg-emerald-600 text-white shadow-lg'
-                                        : theme === 'light'
-                                            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                                    ? 'bg-emerald-600 text-white shadow-lg'
+                                    : theme === 'light'
+                                        ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                                     } disabled:opacity-50`}
                             >
                                 Short Break (5m)
@@ -128,10 +128,10 @@ const Focus: React.FC<FocusProps> = ({ user, todoLists }) => {
                                 onClick={() => setSessionType('long-break')}
                                 disabled={isRunning}
                                 className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all ${sessionType === 'long-break'
-                                        ? 'bg-violet-600 text-white shadow-lg'
-                                        : theme === 'light'
-                                            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                                    ? 'bg-violet-600 text-white shadow-lg'
+                                    : theme === 'light'
+                                        ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                                     } disabled:opacity-50`}
                             >
                                 Long Break (15m)
@@ -178,8 +178,8 @@ const Focus: React.FC<FocusProps> = ({ user, todoLists }) => {
                                 <button
                                     onClick={handleStartPause}
                                     className={`px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 ${isRunning
-                                            ? 'bg-amber-600 hover:bg-amber-500 text-white'
-                                            : 'bg-blue-600 hover:bg-blue-500 text-white shadow-xl'
+                                        ? 'bg-amber-600 hover:bg-amber-500 text-white'
+                                        : 'bg-blue-600 hover:bg-blue-500 text-white shadow-xl'
                                         }`}
                                 >
                                     {isRunning ? 'Pause' : 'Start'}
@@ -187,8 +187,8 @@ const Focus: React.FC<FocusProps> = ({ user, todoLists }) => {
                                 <button
                                     onClick={handleReset}
                                     className={`px-6 py-4 rounded-xl font-medium transition-colors ${theme === 'light'
-                                            ? 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-                                            : 'bg-slate-700 hover:bg-slate-600 text-slate-300'
+                                        ? 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                                        : 'bg-slate-700 hover:bg-slate-600 text-slate-300'
                                         }`}
                                 >
                                     Reset
@@ -219,8 +219,8 @@ const Focus: React.FC<FocusProps> = ({ user, todoLists }) => {
                             {selectedTask && (
                                 <div className="mt-3 flex items-center gap-2">
                                     <span className={`inline-block px-2 py-1 text-xs rounded ${selectedTask.priority === 'high' ? 'bg-red-500/20 text-red-400' :
-                                            selectedTask.priority === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                                                'bg-blue-500/20 text-blue-400'
+                                        selectedTask.priority === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                                            'bg-blue-500/20 text-blue-400'
                                         }`}>
                                         {selectedTask.priority}
                                     </span>

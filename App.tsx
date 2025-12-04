@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { UserProfile, AppView, TodoList, StashItem, Goal, JournalEntry } from './types';
-import { signInWithGoogle, logOut, onAuthStateChange } from './services/auth';
-import { getSmartProductivityTip } from './services/geminiService';
-import { getStashItems, getTodoLists, getGoals, getJournalEntries } from './services/firestore';
-import { useTheme } from './ThemeContext';
-import LandingPage from './components/LandingPage';
-import Dashboard from './components/Dashboard';
-import Checkmate from './components/Checkmate';
-import Stash from './components/Stash';
-import Focus from './components/Focus';
-import Goals from './components/Goals';
-import Journal from './components/Journal';
+import { UserProfile, AppView, TodoList, StashItem, Goal, JournalEntry } from './src/shared/types';
+import { signInWithGoogle, logOut, onAuthStateChange } from './src/shared/services/auth';
+import { getSmartProductivityTip } from './src/shared/services/geminiService';
+import { getStashItems } from './src/features/stash/services/stashService';
+import { getTodoLists } from './src/features/checkmate/services/checkmateService';
+import { getGoals } from './src/features/goals/services/goalsService';
+import { getJournalEntries } from './src/features/journal/services/journalService';
+import { useTheme } from './src/shared/ThemeContext';
+import LandingPage from './src/shared/components/LandingPage';
+import Dashboard from './src/shared/components/Dashboard';
+import Checkmate from './src/features/checkmate/components/Checkmate';
+import Stash from './src/features/stash/components/Stash';
+import Focus from './src/features/focus/components/Focus';
+import Goals from './src/features/goals/components/Goals';
+import Journal from './src/features/journal/components/Journal';
 
 const App: React.FC = () => {
   const { theme, toggleTheme } = useTheme();

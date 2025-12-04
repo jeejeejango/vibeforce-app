@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { JournalEntry, UserProfile } from '../types';
-import { addJournalEntry, updateJournalEntry } from '../services/firestore';
-import { useTheme } from '../ThemeContext';
+import { UserProfile, JournalEntry } from '../../../shared/types';
+import { addJournalEntry, updateJournalEntry } from '../services/journalService';
+import { useTheme } from '../../../shared/ThemeContext';
 
 interface JournalProps {
     user: UserProfile;

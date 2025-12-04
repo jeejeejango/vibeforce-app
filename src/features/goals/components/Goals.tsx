@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Goal, Milestone, UserProfile } from '../types';
-import { addGoal, updateGoal, deleteGoal as deleteGoalFirestore } from '../services/firestore';
-import { useTheme } from '../ThemeContext';
+import { UserProfile, Goal, Milestone } from '../../../shared/types';
+import { addGoal, updateGoal, deleteGoal } from '../services/goalsService';
+import { useTheme } from '../../../shared/ThemeContext';
 
 interface GoalsProps {
     user: UserProfile;
@@ -125,8 +125,8 @@ const Goals: React.FC<GoalsProps> = ({ user, goals, setGoals }) => {
         if (updatedGoal) setSelectedGoal(updatedGoal);
     };
 
-    const deleteGoal = async (goalId: string) => {
-        await deleteGoalFirestore(user.uid, goalId);
+    const handleDeleteGoal = async (goalId: string) => {
+        await deleteGoal(user.uid, goalId);
         setGoals(goals.filter(g => g.id !== goalId));
         setSelectedGoal(null);
     };
@@ -377,7 +377,7 @@ const Goals: React.FC<GoalsProps> = ({ user, goals, setGoals }) => {
                                 <button
                                     onClick={() => {
                                         if (window.confirm('Are you sure you want to delete this goal?')) {
-                                            deleteGoal(selectedGoal.id);
+                                            handleDeleteGoal(selectedGoal.id);
                                         }
                                     }}
                                     className="p-2 rounded-lg hover:bg-red-500/20 text-red-500 transition-colors"

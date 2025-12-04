@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { StashItem, UserProfile } from "../types";
-import { analyzeStashItem } from "../services/geminiService";
-import { addStashItem, deleteStashItem } from "../services/firestore";
-import { useTheme } from "../ThemeContext";
+import React, { useState } from 'react';
+import { UserProfile, StashItem } from '../../../shared/types';
+import { addStashItem, deleteStashItem } from '../services/stashService';
+import { analyzeStashItem } from '../../../shared/services/geminiService';
+import { useTheme } from '../../../shared/ThemeContext';
 
 interface StashProps {
   user: UserProfile;
