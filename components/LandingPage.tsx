@@ -58,7 +58,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, isLoading }) => {
             </span>
           </h1>
           <p className={`text-xl mb-10 max-w-2xl mx-auto leading-relaxed ${theme === 'light' ? 'text-gray-600' : 'text-slate-400'}`}>
-            Unify your workflow. VibeForce integrates strategic task management with an intelligent resource vault, all enhanced by generative AI.
+            Unify your workflow. VibeForce integrates vision setting, strategic task management, deep work focus, and daily reflection with an intelligent resource vault, all enhanced by generative AI.
           </p>
 
           <button
@@ -92,6 +92,39 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, isLoading }) => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
+          {/* Goals Card */}
+          <div className={`group relative rounded-3xl p-8 border transition-colors overflow-hidden ${theme === 'light' ? 'bg-white border-yellow-200 hover:border-yellow-300 hover:bg-yellow-50/30' : 'bg-slate-900/50 border-yellow-500/20 hover:bg-slate-900 hover:border-yellow-500/50'}`}>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-yellow-500/20 transition-all"></div>
+
+            <div className="relative z-10">
+              <div className="w-14 h-14 bg-yellow-500/20 rounded-2xl flex items-center justify-center mb-6 text-yellow-400 group-hover:scale-110 transition-transform">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+              </div>
+
+              <h3 className={`text-3xl font-bold mb-4 flex items-center gap-3 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+                Goals <span className="text-xs px-2 py-1 bg-yellow-500/20 text-yellow-300 rounded border border-yellow-500/20">Vision</span>
+              </h3>
+              <p className={`text-lg mb-8 leading-relaxed ${theme === 'light' ? 'text-gray-600' : 'text-slate-400'}`}>
+                Turn your dreams into reality. Set ambitious goals, break them down into achievable milestones, and track your progress visually.
+              </p>
+
+              <ul className={`space-y-3 ${theme === 'light' ? 'text-yellow-800' : 'text-yellow-100/80'}`}>
+                <li className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-yellow-400"></span>
+                  Milestone Tracking
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-yellow-400"></span>
+                  Visual Progress Rings
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-yellow-400"></span>
+                  Deadline Management
+                </li>
+              </ul>
+            </div>
+          </div>
+
           {/* Checkmate Card */}
           <div className={`group relative rounded-3xl p-8 border transition-colors overflow-hidden ${theme === 'light' ? 'bg-white border-emerald-200 hover:border-emerald-300 hover:bg-emerald-50/30' : 'bg-slate-900/50 border-emerald-500/20 hover:bg-slate-900 hover:border-emerald-500/50'}`}>
             <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-emerald-500/20 transition-all"></div>
@@ -120,6 +153,39 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, isLoading }) => {
                 <li className="flex items-center gap-3">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                   Velocity Tracking
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Focus Card */}
+          <div className={`group relative rounded-3xl p-8 border transition-colors overflow-hidden ${theme === 'light' ? 'bg-white border-blue-200 hover:border-blue-300 hover:bg-blue-50/30' : 'bg-slate-900/50 border-blue-500/20 hover:bg-slate-900 hover:border-blue-500/50'}`}>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-blue-500/20 transition-all"></div>
+
+            <div className="relative z-10">
+              <div className="w-14 h-14 bg-blue-500/20 rounded-2xl flex items-center justify-center mb-6 text-blue-400 group-hover:scale-110 transition-transform">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+
+              <h3 className={`text-3xl font-bold mb-4 flex items-center gap-3 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+                Focus <span className="text-xs px-2 py-1 bg-blue-500/20 text-blue-300 rounded border border-blue-500/20">Timer</span>
+              </h3>
+              <p className={`text-lg mb-8 leading-relaxed ${theme === 'light' ? 'text-gray-600' : 'text-slate-400'}`}>
+                Master deep work with Pomodoro technique. Time-box your sessions, eliminate distractions, and track your focus hours. Integrate seamlessly with your Checkmate tasks.
+              </p>
+
+              <ul className={`space-y-3 ${theme === 'light' ? 'text-blue-800' : 'text-blue-100/80'}`}>
+                <li className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                  Pomodoro Timer
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                  Task Integration
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                  Sessions Tracking
                 </li>
               </ul>
             </div>
@@ -158,37 +224,48 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, isLoading }) => {
             </div>
           </div>
 
-          {/* Focus Card */}
-          <div className={`group relative rounded-3xl p-8 border transition-colors overflow-hidden ${theme === 'light' ? 'bg-white border-blue-200 hover:border-blue-300 hover:bg-blue-50/30' : 'bg-slate-900/50 border-blue-500/20 hover:bg-slate-900 hover:border-blue-500/50'}`}>
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-blue-500/20 transition-all"></div>
+          {/* Journal Card */}
+          <div className={`group relative rounded-3xl p-8 border transition-colors overflow-hidden ${theme === 'light' ? 'bg-white border-purple-200 hover:border-purple-300 hover:bg-purple-50/30' : 'bg-slate-900/50 border-purple-500/20 hover:bg-slate-900 hover:border-purple-500/50'}`}>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-purple-500/20 transition-all"></div>
 
             <div className="relative z-10">
-              <div className="w-14 h-14 bg-blue-500/20 rounded-2xl flex items-center justify-center mb-6 text-blue-400 group-hover:scale-110 transition-transform">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <div className="w-14 h-14 bg-purple-500/20 rounded-2xl flex items-center justify-center mb-6 text-purple-400 group-hover:scale-110 transition-transform">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
               </div>
 
               <h3 className={`text-3xl font-bold mb-4 flex items-center gap-3 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
-                Focus <span className="text-xs px-2 py-1 bg-blue-500/20 text-blue-300 rounded border border-blue-500/20">Timer</span>
+                Journal <span className="text-xs px-2 py-1 bg-purple-500/20 text-purple-300 rounded border border-purple-500/20">Reflection</span>
               </h3>
               <p className={`text-lg mb-8 leading-relaxed ${theme === 'light' ? 'text-gray-600' : 'text-slate-400'}`}>
-                Master deep work with Pomodoro technique. Time-box your sessions, eliminate distractions, and track your focus hours. Integrate seamlessly with your Checkmate tasks.
+                Reflect on your journey. Capture daily thoughts, track your mood, and celebrate wins. A clear mind is a productive mind.
               </p>
 
-              <ul className={`space-y-3 ${theme === 'light' ? 'text-blue-800' : 'text-blue-100/80'}`}>
+              <ul className={`space-y-3 ${theme === 'light' ? 'text-purple-800' : 'text-purple-100/80'}`}>
                 <li className="flex items-center gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                  Pomodoro Timer
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                  Daily Reflections
                 </li>
                 <li className="flex items-center gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                  Task Integration
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                  Mood Tracking
                 </li>
                 <li className="flex items-center gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                  Sessions Tracking
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                  Wins & Learnings
                 </li>
               </ul>
             </div>
+          </div>
+
+          {/* Coming Soon Card */}
+          <div className={`group relative rounded-3xl p-8 border border-dashed transition-colors overflow-hidden flex flex-col items-center justify-center text-center ${theme === 'light' ? 'bg-gray-50 border-gray-300 hover:border-gray-400' : 'bg-slate-900/30 border-slate-700 hover:border-slate-600'}`}>
+            <div className="w-16 h-16 bg-gray-500/10 rounded-full flex items-center justify-center mb-4">
+              <svg className={`w-8 h-8 ${theme === 'light' ? 'text-gray-400' : 'text-slate-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            </div>
+            <h3 className={`text-xl font-bold mb-2 ${theme === 'light' ? 'text-gray-500' : 'text-slate-400'}`}>More Coming Soon</h3>
+            <p className={`text-sm ${theme === 'light' ? 'text-gray-400' : 'text-slate-500'}`}>
+              We are constantly building new tools to supercharge your workflow. Stay tuned!
+            </p>
           </div>
 
         </div>
