@@ -224,16 +224,24 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
           {/* Search Button */}
           <button
             onClick={() => setIsSearchOpen(true)}
-            className={`ml-auto px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${theme === 'light'
-              ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-              : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
-              }`}
+            className={`ml-auto px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
+              theme === 'light'
+                ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+            }`}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
             </svg>
             <span className="hidden md:inline">Search</span>
-            <kbd className="hidden md:inline px-1.5 py-0.5 text-xs rounded bg-gray-200 dark:bg-slate-700">⌘K</kbd>
+            <kbd className="hidden md:inline px-1.5 py-0.5 text-xs rounded bg-gray-200 dark:bg-slate-700">
+              ⌘K
+            </kbd>
           </button>
         </header>
 
