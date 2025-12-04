@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { UserProfile } from '../types';
+import { UserProfile, TodoList, StashItem, Goal, JournalEntry } from '../types';
+import { Search } from './Search';
+import { useSearch, SearchData } from '../hooks/useSearch';
 
 interface AppLayoutProps {
   user: UserProfile;
@@ -8,6 +10,7 @@ interface AppLayoutProps {
   toggleTheme: () => void;
   handleLogout: () => void;
   children: React.ReactNode;
+  searchData: SearchData;
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({
@@ -16,9 +19,28 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   toggleTheme,
   handleLogout,
   children,
+  searchData,
 }) => {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchFilter, setSearchFilter] = React.useState('all');
+
+  const searchResults = useSearch(searchData, searchQuery, searchFilter);
+
+  // Keyboard shortcut for search (Cmd/Ctrl + K)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <div
@@ -195,14 +217,40 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         className={`flex-1 ml-20 lg:ml-64 relative min-h-screen ${theme === 'light' ? 'bg-gray-50' : 'bg-slate-950'}`}
       >
         <header
-          className={`sticky top-0 z-10 backdrop-blur-md border-b px-6 py-4 flex justify-between items-center lg:hidden ${theme === 'light' ? 'bg-white/80 border-gray-200' : 'bg-slate-950/80 border-slate-800'}`}
+          className={`sticky top-0 z-10 backdrop-blur-md border-b px-6 py-4 flex justify-between items-center ${theme === 'light' ? 'bg-white/80 border-gray-200' : 'bg-slate-950/80 border-slate-800'}`}
         >
-          <span className="font-bold text-lg">VibeForce</span>
-          {/* Mobile menu toggle would go here */}
+          <span className="font-bold text-lg lg:hidden">VibeForce</span>
+
+          {/* Search Button */}
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            className={`ml-auto px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${theme === 'light'
+              ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+              : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+              }`}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <span className="hidden md:inline">Search</span>
+            <kbd className="hidden md:inline px-1.5 py-0.5 text-xs rounded bg-gray-200 dark:bg-slate-700">⌘K</kbd>
+          </button>
         </header>
 
         <div className="p-2 lg:p-6">{children}</div>
       </main>
+
+      {/* Search Modal */}
+      <Search
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        results={searchResults}
+        query={searchQuery}
+        onQueryChange={setSearchQuery}
+        filter={searchFilter}
+        onFilterChange={setSearchFilter}
+        theme={theme}
+      />
     </div>
   );
 };

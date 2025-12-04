@@ -114,7 +114,13 @@ const App: React.FC = () => {
           path="/dashboard"
           element={
             <ProtectedRoute user={user}>
-              <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
+              <AppLayout
+                user={user!}
+                theme={theme}
+                toggleTheme={toggleTheme}
+                handleLogout={handleLogout}
+                searchData={{ goals, todoLists, journalEntries, stashItems }}
+              >
                 <ErrorBoundary featureName="Dashboard">
                   <Dashboard user={user!} todoLists={todoLists} stashItems={stashItems} goals={goals} journalEntries={journalEntries} productivityTip={productivityTip} />
                 </ErrorBoundary>
@@ -127,7 +133,13 @@ const App: React.FC = () => {
           path="/goals"
           element={
             <ProtectedRoute user={user}>
-              <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
+              <AppLayout
+                user={user!}
+                theme={theme}
+                toggleTheme={toggleTheme}
+                handleLogout={handleLogout}
+                searchData={{ goals, todoLists, journalEntries, stashItems }}
+              >
                 <ErrorBoundary featureName="Goals">
                   <Goals user={user!} goals={goals} setGoals={setGoals} />
                 </ErrorBoundary>
@@ -140,7 +152,13 @@ const App: React.FC = () => {
           path="/checkmate"
           element={
             <ProtectedRoute user={user}>
-              <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
+              <AppLayout
+                user={user!}
+                theme={theme}
+                toggleTheme={toggleTheme}
+                handleLogout={handleLogout}
+                searchData={{ goals, todoLists, journalEntries, stashItems }}
+              >
                 <ErrorBoundary featureName="Checkmate">
                   <Checkmate user={user!} todoLists={todoLists} setTodoLists={setTodoLists} />
                 </ErrorBoundary>
@@ -153,7 +171,13 @@ const App: React.FC = () => {
           path="/focus"
           element={
             <ProtectedRoute user={user}>
-              <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
+              <AppLayout
+                user={user!}
+                theme={theme}
+                toggleTheme={toggleTheme}
+                handleLogout={handleLogout}
+                searchData={{ goals, todoLists, journalEntries, stashItems }}
+              >
                 <ErrorBoundary featureName="Focus">
                   <Focus user={user!} todoLists={todoLists} />
                 </ErrorBoundary>
@@ -166,7 +190,13 @@ const App: React.FC = () => {
           path="/stash"
           element={
             <ProtectedRoute user={user}>
-              <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
+              <AppLayout
+                user={user!}
+                theme={theme}
+                toggleTheme={toggleTheme}
+                handleLogout={handleLogout}
+                searchData={{ goals, todoLists, journalEntries, stashItems }}
+              >
                 <ErrorBoundary featureName="Stash">
                   <Stash user={user!} items={stashItems} setItems={setStashItems} />
                 </ErrorBoundary>
@@ -179,7 +209,13 @@ const App: React.FC = () => {
           path="/journal"
           element={
             <ProtectedRoute user={user}>
-              <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
+              <AppLayout
+                user={user!}
+                theme={theme}
+                toggleTheme={toggleTheme}
+                handleLogout={handleLogout}
+                searchData={{ goals, todoLists, journalEntries, stashItems }}
+              >
                 <ErrorBoundary featureName="Journal">
                   <Journal user={user!} entries={journalEntries} setEntries={setJournalEntries} />
                 </ErrorBoundary>
