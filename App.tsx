@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { UserProfile, AppView, TodoList, StashItem, Goal, JournalEntry } from './src/shared/types';
+import { Routes, Route, Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { UserProfile, TodoList, StashItem, Goal, JournalEntry } from './src/shared/types';
 import { signInWithGoogle, logOut, onAuthStateChange } from './src/shared/services/auth';
 import { getSmartProductivityTip } from './src/shared/services/geminiService';
 import { getStashItems } from './src/features/stash/services/stashService';
@@ -15,10 +16,19 @@ import Focus from './src/features/focus/components/Focus';
 import Goals from './src/features/goals/components/Goals';
 import Journal from './src/features/journal/components/Journal';
 
+// Protected Route wrapper component
+const ProtectedRoute: React.FC<{ user: UserProfile | null; children: React.ReactNode }> = ({ user, children }) => {
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+  return <>{children}</>;
+};
+
 const App: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [currentView, setCurrentView] = useState<AppView>('dashboard');
   const [isLoading, setIsLoading] = useState(false);
   const [productivityTip, setProductivityTip] = useState("Loading insight...");
 
@@ -33,6 +43,7 @@ const App: React.FC = () => {
     try {
       const u = await signInWithGoogle();
       setUser(u);
+      navigate('/dashboard'); // Redirect to dashboard after login
     } catch (error) {
       console.error("Login failed", error);
     } finally {
@@ -43,11 +54,11 @@ const App: React.FC = () => {
   const handleLogout = async () => {
     await logOut();
     setUser(null);
-    setCurrentView('dashboard');
     setStashItems([]);
     setTodoLists([]);
     setGoals([]);
     setJournalEntries([]);
+    navigate('/'); // Redirect to landing page after logout
   };
 
   // Listen for auth state changes (handles page refresh persistence)
@@ -78,10 +89,113 @@ const App: React.FC = () => {
     }
   }, [user]);
 
-  if (!user) {
-    return <LandingPage onLogin={handleLogin} isLoading={isLoading} />;
-  }
+  // Helper to check if a route is active
+  const isActive = (path: string) => location.pathname === path;
 
+  return (
+    <Routes>
+      {/* Public Route */}
+      <Route path="/" element={
+        user ? <Navigate to="/dashboard" replace /> : <LandingPage onLogin={handleLogin} isLoading={isLoading} />
+      } />
+
+      {/* Protected Routes */}
+      <Route path="/dashboard" element={
+        <ProtectedRoute user={user}>
+          <AppLayout
+            user={user!}
+            theme={theme}
+            toggleTheme={toggleTheme}
+            handleLogout={handleLogout}
+            isActive={isActive}
+          >
+            <Dashboard user={user!} todoLists={todoLists} stashItems={stashItems} goals={goals} journalEntries={journalEntries} productivityTip={productivityTip} />
+          </AppLayout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/goals" element={
+        <ProtectedRoute user={user}>
+          <AppLayout
+            user={user!}
+            theme={theme}
+            toggleTheme={toggleTheme}
+            handleLogout={handleLogout}
+            isActive={isActive}
+          >
+            <Goals user={user!} goals={goals} setGoals={setGoals} />
+          </AppLayout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/checkmate" element={
+        <ProtectedRoute user={user}>
+          <AppLayout
+            user={user!}
+            theme={theme}
+            toggleTheme={toggleTheme}
+            handleLogout={handleLogout}
+            isActive={isActive}
+          >
+            <Checkmate user={user!} todoLists={todoLists} setTodoLists={setTodoLists} />
+          </AppLayout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/focus" element={
+        <ProtectedRoute user={user}>
+          <AppLayout
+            user={user!}
+            theme={theme}
+            toggleTheme={toggleTheme}
+            handleLogout={handleLogout}
+            isActive={isActive}
+          >
+            <Focus user={user!} todoLists={todoLists} />
+          </AppLayout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/stash" element={
+        <ProtectedRoute user={user}>
+          <AppLayout
+            user={user!}
+            theme={theme}
+            toggleTheme={toggleTheme}
+            handleLogout={handleLogout}
+            isActive={isActive}
+          >
+            <Stash user={user!} items={stashItems} setItems={setStashItems} />
+          </AppLayout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/journal" element={
+        <ProtectedRoute user={user}>
+          <AppLayout
+            user={user!}
+            theme={theme}
+            toggleTheme={toggleTheme}
+            handleLogout={handleLogout}
+            isActive={isActive}
+          >
+            <Journal user={user!} entries={journalEntries} setEntries={setJournalEntries} />
+          </AppLayout>
+        </ProtectedRoute>
+      } />
+    </Routes>
+  );
+};
+
+// Layout component with sidebar navigation
+const AppLayout: React.FC<{
+  user: UserProfile;
+  theme: string;
+  toggleTheme: () => void;
+  handleLogout: () => void;
+  isActive: (path: string) => boolean;
+  children: React.ReactNode;
+}> = ({ user, theme, toggleTheme, handleLogout, isActive, children }) => {
   return (
     <div className={`min-h-screen flex font-sans ${theme === 'light' ? 'bg-gray-50 text-gray-900' : 'bg-slate-950 text-slate-100'}`}>
       {/* Sidebar Navigation */}
@@ -92,53 +206,53 @@ const App: React.FC = () => {
         </div>
 
         <nav className="flex-1 px-4 py-6 space-y-2">
-          <button
-            onClick={() => setCurrentView('dashboard')}
-            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${currentView === 'dashboard' ? 'bg-violet-600 text-white shadow-lg shadow-violet-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+          <Link
+            to="/dashboard"
+            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${isActive('/dashboard') ? 'bg-violet-600 text-white shadow-lg shadow-violet-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
             <span className="hidden lg:block font-medium">Dashboard</span>
-          </button>
+          </Link>
 
-          <button
-            onClick={() => setCurrentView('goals')}
-            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${currentView === 'goals' ? 'bg-yellow-600 text-white shadow-lg shadow-yellow-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+          <Link
+            to="/goals"
+            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${isActive('/goals') ? 'bg-yellow-600 text-white shadow-lg shadow-yellow-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
             <span className="hidden lg:block font-medium">Goals</span>
-          </button>
+          </Link>
 
-          <button
-            onClick={() => setCurrentView('checkmate')}
-            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${currentView === 'checkmate' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+          <Link
+            to="/checkmate"
+            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${isActive('/checkmate') ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <span className="hidden lg:block font-medium">Checkmate</span>
-          </button>
+          </Link>
 
-          <button
-            onClick={() => setCurrentView('focus')}
-            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${currentView === 'focus' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+          <Link
+            to="/focus"
+            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${isActive('/focus') ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <span className="hidden lg:block font-medium">Focus</span>
-          </button>
+          </Link>
 
-          <button
-            onClick={() => setCurrentView('stash')}
-            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${currentView === 'stash' ? 'bg-amber-600 text-white shadow-lg shadow-amber-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+          <Link
+            to="/stash"
+            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${isActive('/stash') ? 'bg-amber-600 text-white shadow-lg shadow-amber-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
             <span className="hidden lg:block font-medium">Stash</span>
-          </button>
+          </Link>
 
-          <button
-            onClick={() => setCurrentView('journal')}
-            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${currentView === 'journal' ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+          <Link
+            to="/journal"
+            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${isActive('/journal') ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
             <span className="hidden lg:block font-medium">Journal</span>
-          </button>
+          </Link>
         </nav>
 
         <div className={`p-4 border-t ${theme === 'light' ? 'border-gray-200' : 'border-slate-800'}`}>
@@ -181,12 +295,7 @@ const App: React.FC = () => {
         </header>
 
         <div className="p-2 lg:p-6">
-          {currentView === 'dashboard' && <Dashboard user={user} todoLists={todoLists} stashItems={stashItems} goals={goals} journalEntries={journalEntries} productivityTip={productivityTip} />}
-          {currentView === 'checkmate' && <Checkmate user={user} todoLists={todoLists} setTodoLists={setTodoLists} />}
-          {currentView === 'stash' && <Stash user={user} items={stashItems} setItems={setStashItems} />}
-          {currentView === 'focus' && <Focus user={user} todoLists={todoLists} />}
-          {currentView === 'goals' && <Goals user={user} goals={goals} setGoals={setGoals} />}
-          {currentView === 'journal' && <Journal user={user} entries={journalEntries} setEntries={setJournalEntries} />}
+          {children}
         </div>
       </main>
     </div>
