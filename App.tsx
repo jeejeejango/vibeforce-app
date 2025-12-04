@@ -8,6 +8,7 @@ import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
 import Checkmate from './components/Checkmate';
 import Stash from './components/Stash';
+import Focus from './components/Focus';
 
 const App: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -101,6 +102,14 @@ const App: React.FC = () => {
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
             <span className="hidden lg:block font-medium">Stash</span>
           </button>
+
+          <button
+            onClick={() => setCurrentView('focus')}
+            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${currentView === 'focus' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span className="hidden lg:block font-medium">Focus</span>
+          </button>
         </nav>
 
         <div className={`p-4 border-t ${theme === 'light' ? 'border-gray-200' : 'border-slate-800'}`}>
@@ -146,6 +155,7 @@ const App: React.FC = () => {
           {currentView === 'dashboard' && <Dashboard user={user} todoLists={todoLists} stashItems={stashItems} productivityTip={productivityTip} />}
           {currentView === 'checkmate' && <Checkmate user={user} todoLists={todoLists} setTodoLists={setTodoLists} />}
           {currentView === 'stash' && <Stash user={user} items={stashItems} setItems={setStashItems} />}
+          {currentView === 'focus' && <Focus user={user} todoLists={todoLists} />}
         </div>
       </main>
     </div>

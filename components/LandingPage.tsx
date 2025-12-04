@@ -90,7 +90,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, isLoading }) => {
       <div className="max-w-7xl mx-auto px-6 pb-32">
         <h2 className={`text-center text-3xl font-bold mb-16 ${theme === 'light' ? 'text-gray-800' : 'text-slate-200'}`}>Integrated Power Apps</h2>
 
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
           {/* Checkmate Card */}
           <div className={`group relative rounded-3xl p-8 border transition-colors overflow-hidden ${theme === 'light' ? 'bg-white border-emerald-200 hover:border-emerald-300 hover:bg-emerald-50/30' : 'bg-slate-900/50 border-emerald-500/20 hover:bg-slate-900 hover:border-emerald-500/50'}`}>
@@ -153,6 +153,39 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, isLoading }) => {
                 <li className="flex items-center gap-3">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
                   Link & Code Support
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Focus Card */}
+          <div className={`group relative rounded-3xl p-8 border transition-colors overflow-hidden ${theme === 'light' ? 'bg-white border-blue-200 hover:border-blue-300 hover:bg-blue-50/30' : 'bg-slate-900/50 border-blue-500/20 hover:bg-slate-900 hover:border-blue-500/50'}`}>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-blue-500/20 transition-all"></div>
+
+            <div className="relative z-10">
+              <div className="w-14 h-14 bg-blue-500/20 rounded-2xl flex items-center justify-center mb-6 text-blue-400 group-hover:scale-110 transition-transform">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+
+              <h3 className={`text-3xl font-bold mb-4 flex items-center gap-3 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+                Focus <span className="text-xs px-2 py-1 bg-blue-500/20 text-blue-300 rounded border border-blue-500/20">Timer</span>
+              </h3>
+              <p className={`text-lg mb-8 leading-relaxed ${theme === 'light' ? 'text-gray-600' : 'text-slate-400'}`}>
+                Master deep work with Pomodoro technique. Time-box your sessions, eliminate distractions, and track your focus hours. Integrate seamlessly with your Checkmate tasks.
+              </p>
+
+              <ul className={`space-y-3 ${theme === 'light' ? 'text-blue-800' : 'text-blue-100/80'}`}>
+                <li className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                  Pomodoro Timer
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                  Task Integration
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                  Sessions Tracking
                 </li>
               </ul>
             </div>

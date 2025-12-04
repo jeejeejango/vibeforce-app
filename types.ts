@@ -33,8 +33,20 @@ export interface StashItem {
   createdAt: number;
 }
 
+// Focus (Deep Work Timer) Types
+export interface FocusSession {
+  id: string;
+  taskId?: string;
+  taskTitle?: string;
+  sessionType: 'work' | 'short-break' | 'long-break';
+  duration: number; // in seconds
+  completed: boolean;
+  startedAt: number;
+  completedAt?: number;
+}
+
 // App Navigation
-export type AppView = 'dashboard' | 'checkmate' | 'stash';
+export type AppView = 'dashboard' | 'checkmate' | 'stash' | 'focus';
 
 // API Keys (In a real app, handled by backend or securely)
 export interface AppConfig {
