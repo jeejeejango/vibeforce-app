@@ -1,18 +1,20 @@
 import React from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
-import { TodoList, StashItem, UserProfile } from '../types';
+import { TodoList, StashItem, UserProfile, Goal, JournalEntry } from '../types';
 import { useTheme } from '../ThemeContext';
 
 interface DashboardProps {
   user: UserProfile;
   todoLists: TodoList[];
   stashItems: StashItem[];
+  goals: Goal[];
+  journalEntries: JournalEntry[];
   productivityTip: string;
 }
 
 const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444'];
 
-const Dashboard: React.FC<DashboardProps> = ({ user, todoLists, stashItems, productivityTip }) => {
+const Dashboard: React.FC<DashboardProps> = ({ user, todoLists, stashItems, goals, journalEntries, productivityTip }) => {
   const { theme } = useTheme();
   const allTasks = todoLists.flatMap(list => list.tasks);
   const completedTasks = allTasks.filter(t => t.status === 'done').length;
@@ -98,6 +100,89 @@ const Dashboard: React.FC<DashboardProps> = ({ user, todoLists, stashItems, prod
           <p className={`text-xs mt-2 ${theme === 'light' ? 'text-gray-500' : 'text-slate-500'}`}>
             Goal: 120 minutes (5 sessions)
           </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Goals Progress - Gold Theme */}
+        <div className={`rounded-xl p-6 border relative overflow-hidden ${theme === 'light' ? 'bg-white border-yellow-200' : 'bg-slate-900/50 border-yellow-500/30'}`}>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 blur-[60px] rounded-full"></div>
+          <div className="relative z-10">
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center gap-3">
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${theme === 'light' ? 'bg-yellow-100' : 'bg-yellow-500/20'}`}>
+                  <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                </div>
+                <h3 className={`text-xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-slate-200'}`}>Active Goals</h3>
+              </div>
+            </div>
+            <div className="space-y-4">
+              {goals.slice(0, 3).map(goal => {
+                const completed = goal.milestones.filter(m => m.completed).length;
+                const total = goal.milestones.length;
+                const progress = total === 0 ? 0 : Math.round((completed / total) * 100);
+
+                return (
+                  <div key={goal.id} className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className={`font-medium ${theme === 'light' ? 'text-gray-700' : 'text-slate-300'}`}>{goal.title}</span>
+                      <span className={`${theme === 'light' ? 'text-gray-500' : 'text-slate-500'}`}>{progress}%</span>
+                    </div>
+                    <div className={`h-2 w-full rounded-full overflow-hidden ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800'}`}>
+                      <div
+                        className="h-full bg-yellow-500 rounded-full transition-all duration-1000"
+                        style={{ width: `${progress}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                );
+              })}
+              {goals.length === 0 && <p className={`text-sm ${theme === 'light' ? 'text-gray-500' : 'text-slate-500'}`}>No active goals. Set a new goal to track progress!</p>}
+            </div>
+          </div>
+        </div>
+
+        {/* Journal Recent - Purple Theme */}
+        <div className={`rounded-xl p-6 border relative overflow-hidden ${theme === 'light' ? 'bg-white border-purple-200' : 'bg-slate-900/50 border-purple-500/30'}`}>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 blur-[60px] rounded-full"></div>
+          <div className="relative z-10">
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center gap-3">
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${theme === 'light' ? 'bg-purple-100' : 'bg-purple-500/20'}`}>
+                  <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                </div>
+                <h3 className={`text-xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-slate-200'}`}>Recent Reflections</h3>
+              </div>
+            </div>
+            <div className="space-y-3">
+              {journalEntries.slice(0, 3).map(entry => {
+                const moodEmoji = {
+                  great: '😊',
+                  good: '😃',
+                  okay: '😐',
+                  down: '😔',
+                  stressed: '😰',
+                }[entry.mood] || '😐';
+
+                return (
+                  <div key={entry.id} className={`p-3 rounded-lg border flex items-start gap-3 ${theme === 'light' ? 'bg-purple-50/50 border-purple-200/50' : 'bg-purple-500/5 border-purple-500/20'}`}>
+                    <span className="text-xl">{moodEmoji}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className={`text-xs font-medium ${theme === 'light' ? 'text-purple-700' : 'text-purple-300'}`}>
+                          {new Date(entry.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                        </span>
+                      </div>
+                      <p className={`text-sm truncate ${theme === 'light' ? 'text-gray-600' : 'text-slate-400'}`}>
+                        {entry.content}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+              {journalEntries.length === 0 && <p className={`text-sm ${theme === 'light' ? 'text-gray-500' : 'text-slate-500'}`}>No entries yet. Start your journal today!</p>}
+            </div>
+          </div>
         </div>
       </div>
 

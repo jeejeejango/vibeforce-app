@@ -178,7 +178,7 @@ const App: React.FC = () => {
         </header>
 
         <div className="p-2 lg:p-6">
-          {currentView === 'dashboard' && <Dashboard user={user} todoLists={todoLists} stashItems={stashItems} productivityTip={productivityTip} />}
+          {currentView === 'dashboard' && <Dashboard user={user} todoLists={todoLists} stashItems={stashItems} goals={goals} journalEntries={journalEntries} productivityTip={productivityTip} />}
           {currentView === 'checkmate' && <Checkmate user={user} todoLists={todoLists} setTodoLists={setTodoLists} />}
           {currentView === 'stash' && <Stash user={user} items={stashItems} setItems={setStashItems} />}
           {currentView === 'focus' && <Focus user={user} todoLists={todoLists} />}
