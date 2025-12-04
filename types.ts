@@ -45,8 +45,39 @@ export interface FocusSession {
   completedAt?: number;
 }
 
+// Goals (Milestone Tracker) Types
+export interface Goal {
+  id: string;
+  title: string;
+  description: string;
+  category: 'career' | 'health' | 'learning' | 'personal';
+  targetDate: number;
+  milestones: Milestone[];
+  linkedTaskIds: string[];
+  createdAt: number;
+}
+
+export interface Milestone {
+  id: string;
+  title: string;
+  completed: boolean;
+  completedAt?: number;
+}
+
+// Journal (Daily Reflection) Types
+export interface JournalEntry {
+  id: string;
+  date: number; // timestamp for start of day
+  content: string;
+  mood: 'great' | 'good' | 'okay' | 'down' | 'stressed';
+  wins: string[];
+  learnings: string[];
+  aiSummary?: string;
+  createdAt: number;
+}
+
 // App Navigation
-export type AppView = 'dashboard' | 'checkmate' | 'stash' | 'focus';
+export type AppView = 'dashboard' | 'checkmate' | 'stash' | 'focus' | 'goals' | 'journal';
 
 // API Keys (In a real app, handled by backend or securely)
 export interface AppConfig {

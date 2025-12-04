@@ -34,15 +34,15 @@ export const getTodoLists = async (userId: string): Promise<TodoList[]> => {
     const todoListsCollection = getTodoListsCollectionRef(userId);
     const q = query(todoListsCollection);
     const querySnapshot = await getDocs(q);
-    
+
     const todoListsPromises = querySnapshot.docs.map(async (listDoc) => {
         const todoList = { ...listDoc.data(), id: listDoc.id } as TodoList;
-        
+
         // Fetch tasks for each todo list from the subcollection
         const tasksCollectionRef = collection(listDoc.ref, 'tasks');
         const tasksQuerySnapshot = await getDocs(tasksCollectionRef);
         todoList.tasks = tasksQuerySnapshot.docs.map(taskDoc => ({ ...taskDoc.data(), id: taskDoc.id } as Task));
-        
+
         return todoList;
     });
 
@@ -84,4 +84,66 @@ export const updateTask = async (userId: string, listId: string, taskId: string,
 export const deleteTask = async (userId: string, listId: string, taskId: string): Promise<void> => {
     const taskDocRef = doc(db, 'users', userId, 'todoLists', listId, 'tasks', taskId);
     await deleteDoc(taskDocRef);
+}
+
+// Goals
+import { Goal, JournalEntry } from '../types';
+
+const getGoalsCollectionRef = (userId: string) => {
+    return collection(db, 'users', userId, 'goals');
+}
+
+export const getGoals = async (userId: string): Promise<Goal[]> => {
+    const goalsCollection = getGoalsCollectionRef(userId);
+    const q = query(goalsCollection);
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Goal));
+}
+
+export const addGoal = async (userId: string, goal: Omit<Goal, 'id'>): Promise<Goal> => {
+    const goalsCollection = getGoalsCollectionRef(userId);
+    const docRef = await addDoc(goalsCollection, goal);
+    return { ...goal, id: docRef.id };
+}
+
+export const updateGoal = async (userId: string, goalId: string, updatedGoal: Partial<Goal>): Promise<void> => {
+    const goalDoc = doc(db, 'users', userId, 'goals', goalId);
+    const batch = writeBatch(db);
+    batch.update(goalDoc, updatedGoal);
+    await batch.commit();
+}
+
+export const deleteGoal = async (userId: string, goalId: string): Promise<void> => {
+    const goalDoc = doc(db, 'users', userId, 'goals', goalId);
+    await deleteDoc(goalDoc);
+}
+
+// Journal
+const getJournalCollectionRef = (userId: string) => {
+    return collection(db, 'users', userId, 'journal');
+}
+
+export const getJournalEntries = async (userId: string): Promise<JournalEntry[]> => {
+    const journalCollection = getJournalCollectionRef(userId);
+    const q = query(journalCollection);
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as JournalEntry));
+}
+
+export const addJournalEntry = async (userId: string, entry: Omit<JournalEntry, 'id'>): Promise<JournalEntry> => {
+    const journalCollection = getJournalCollectionRef(userId);
+    const docRef = await addDoc(journalCollection, entry);
+    return { ...entry, id: docRef.id };
+}
+
+export const updateJournalEntry = async (userId: string, entryId: string, updatedEntry: Partial<JournalEntry>): Promise<void> => {
+    const entryDoc = doc(db, 'users', userId, 'journal', entryId);
+    const batch = writeBatch(db);
+    batch.update(entryDoc, updatedEntry);
+    await batch.commit();
+}
+
+export const deleteJournalEntry = async (userId: string, entryId: string): Promise<void> => {
+    const entryDoc = doc(db, 'users', userId, 'journal', entryId);
+    await deleteDoc(entryDoc);
 }

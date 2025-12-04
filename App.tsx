@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { UserProfile, AppView, TodoList, StashItem } from './types';
+import { UserProfile, AppView, TodoList, StashItem, Goal, JournalEntry } from './types';
 import { signInWithGoogle, logOut, onAuthStateChange } from './services/auth';
 import { getSmartProductivityTip } from './services/geminiService';
-import { getStashItems, getTodoLists } from './services/firestore';
+import { getStashItems, getTodoLists, getGoals, getJournalEntries } from './services/firestore';
 import { useTheme } from './ThemeContext';
 import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
 import Checkmate from './components/Checkmate';
 import Stash from './components/Stash';
 import Focus from './components/Focus';
+import Goals from './components/Goals';
+import Journal from './components/Journal';
 
 const App: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -20,6 +22,8 @@ const App: React.FC = () => {
   // App State
   const [todoLists, setTodoLists] = useState<TodoList[]>([]);
   const [stashItems, setStashItems] = useState<StashItem[]>([]);
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -39,6 +43,8 @@ const App: React.FC = () => {
     setCurrentView('dashboard');
     setStashItems([]);
     setTodoLists([]);
+    setGoals([]);
+    setJournalEntries([]);
   };
 
   // Listen for auth state changes (handles page refresh persistence)
@@ -52,6 +58,10 @@ const App: React.FC = () => {
         setStashItems(items);
         const lists = await getTodoLists(user.uid);
         setTodoLists(lists);
+        const userGoals = await getGoals(user.uid);
+        setGoals(userGoals);
+        const userEntries = await getJournalEntries(user.uid);
+        setJournalEntries(userEntries);
       }
     });
 
@@ -110,6 +120,22 @@ const App: React.FC = () => {
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <span className="hidden lg:block font-medium">Focus</span>
           </button>
+
+          <button
+            onClick={() => setCurrentView('goals')}
+            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${currentView === 'goals' ? 'bg-yellow-600 text-white shadow-lg shadow-yellow-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+            <span className="hidden lg:block font-medium">Goals</span>
+          </button>
+
+          <button
+            onClick={() => setCurrentView('journal')}
+            className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${currentView === 'journal' ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50' : theme === 'light' ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            <span className="hidden lg:block font-medium">Journal</span>
+          </button>
         </nav>
 
         <div className={`p-4 border-t ${theme === 'light' ? 'border-gray-200' : 'border-slate-800'}`}>
@@ -156,6 +182,8 @@ const App: React.FC = () => {
           {currentView === 'checkmate' && <Checkmate user={user} todoLists={todoLists} setTodoLists={setTodoLists} />}
           {currentView === 'stash' && <Stash user={user} items={stashItems} setItems={setStashItems} />}
           {currentView === 'focus' && <Focus user={user} todoLists={todoLists} />}
+          {currentView === 'goals' && <Goals user={user} goals={goals} setGoals={setGoals} />}
+          {currentView === 'journal' && <Journal user={user} entries={journalEntries} setEntries={setJournalEntries} />}
         </div>
       </main>
     </div>
