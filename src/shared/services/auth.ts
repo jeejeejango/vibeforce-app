@@ -1,6 +1,6 @@
-import { UserProfile } from "../types";
-import { auth, googleProvider } from "./firebase";
-import { signInWithPopup, signOut, onAuthStateChanged, User } from "firebase/auth";
+import { UserProfile } from '../types';
+import { auth, googleProvider } from './firebase';
+import { signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
 
 /**
  * Sign in with Google using Firebase Authentication
@@ -12,12 +12,12 @@ export const signInWithGoogle = async (): Promise<UserProfile> => {
 
     return {
       uid: user.uid,
-      displayName: user.displayName || "User",
-      email: user.email || "",
-      photoURL: user.photoURL || ""
+      displayName: user.displayName || 'User',
+      email: user.email || '',
+      photoURL: user.photoURL || '',
     };
   } catch (error) {
-    console.error("Error signing in with Google:", error);
+    console.error('Error signing in with Google:', error);
     throw error;
   }
 };
@@ -29,7 +29,7 @@ export const logOut = async (): Promise<void> => {
   try {
     await signOut(auth);
   } catch (error) {
-    console.error("Error signing out:", error);
+    console.error('Error signing out:', error);
     throw error;
   }
 };
@@ -44,9 +44,9 @@ export const onAuthStateChange = (callback: (user: UserProfile | null) => void) 
     if (firebaseUser) {
       const userProfile: UserProfile = {
         uid: firebaseUser.uid,
-        displayName: firebaseUser.displayName || "User",
-        email: firebaseUser.email || "",
-        photoURL: firebaseUser.photoURL || ""
+        displayName: firebaseUser.displayName || 'User',
+        email: firebaseUser.email || '',
+        photoURL: firebaseUser.photoURL || '',
       };
       callback(userProfile);
     } else {
@@ -54,4 +54,3 @@ export const onAuthStateChange = (callback: (user: UserProfile | null) => void) 
     }
   });
 };
-
