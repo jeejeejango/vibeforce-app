@@ -12,6 +12,8 @@ interface StashProps {
 const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
   const [content, setContent] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [tagSearch, setTagSearch] = useState("");
 
   const handleStash = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +45,43 @@ const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
     // Optimistic UI update
     setItems((prev) => prev.filter((i) => i.id !== id));
     await deleteStashItem(user.uid, id);
+  };
+
+  // Get all unique tags from items
+  const allTags = Array.from(
+    new Set(items.flatMap((item) => item.tags))
+  ).sort();
+
+  // Filter tags based on search
+  const filteredTags = allTags.filter((tag: string) =>
+    tag.toLowerCase().includes(tagSearch.toLowerCase())
+  );
+
+  // Filter items based on selected tags
+  const filteredItems = selectedTags.length > 0
+    ? items.filter((item) =>
+      selectedTags.some((tag) => item.tags.includes(tag))
+    )
+    : items;
+
+  // Toggle tag selection
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag)
+        ? prev.filter((t) => t !== tag)
+        : [...prev, tag]
+    );
+  };
+
+  // Clear all filters
+  const clearFilters = () => {
+    setSelectedTags([]);
+    setTagSearch("");
+  };
+
+  // Count items per tag
+  const getTagCount = (tag: string) => {
+    return items.filter((item) => item.tags.includes(tag)).length;
   };
 
   return (
@@ -83,8 +122,102 @@ const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
         </div>
       </div>
 
+      {/* Tag Search & Filter Section */}
+      {allTags.length > 0 && (
+        <div className="mb-6 bg-slate-900/50 border border-slate-800 rounded-xl p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider">
+              Filter by Tags
+            </h3>
+            {selectedTags.length > 0 && (
+              <button
+                onClick={clearFilters}
+                className="text-xs text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1"
+              >
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                Clear filters
+              </button>
+            )}
+          </div>
+
+          {/* Tag Search Input */}
+          <div className="relative mb-4">
+            <input
+              type="text"
+              value={tagSearch}
+              onChange={(e) => setTagSearch(e.target.value)}
+              placeholder="Search tags..."
+              className="w-full bg-slate-800 border border-slate-700 text-white rounded-lg px-4 py-2 pl-10 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all"
+            />
+            <svg
+              className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+
+          {/* Tag Cloud */}
+          <div className="flex flex-wrap gap-2">
+            {filteredTags.map((tag: string) => {
+              const isSelected = selectedTags.includes(tag);
+              const count = getTagCount(tag);
+              return (
+                <button
+                  key={tag}
+                  onClick={() => toggleTag(tag)}
+                  className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-all transform hover:scale-105 ${isSelected
+                    ? "bg-amber-600 text-white shadow-lg shadow-amber-900/50"
+                    : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                    }`}
+                >
+                  #{tag}
+                  <span className={`ml-1.5 ${isSelected ? "text-amber-200" : "text-slate-500"}`}>
+                    ({count})
+                  </span>
+                </button>
+              );
+            })}
+            {filteredTags.length === 0 && tagSearch && (
+              <p className="text-sm text-slate-500">No tags match "{tagSearch}"</p>
+            )}
+          </div>
+
+          {/* Active Filters Display */}
+          {selectedTags.length > 0 && (
+            <div className="mt-4 pt-4 border-t border-slate-800">
+              <p className="text-xs text-slate-500 mb-2">
+                Showing {filteredItems.length} of {items.length} items
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {selectedTags.map((tag: string) => (
+                  <div
+                    key={tag}
+                    className="flex items-center gap-1.5 bg-amber-600/20 text-amber-300 text-xs px-2.5 py-1 rounded-md border border-amber-600/30"
+                  >
+                    <span>#{tag}</span>
+                    <button
+                      onClick={() => toggleTag(tag)}
+                      className="hover:text-amber-100 transition-colors"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {items.map((item) => (
+        {filteredItems.map((item) => (
           <div
             key={item.id}
             className="bg-slate-800 border border-slate-700 rounded-xl p-5 hover:border-amber-500/50 transition-colors flex flex-col h-full group"
@@ -92,11 +225,10 @@ const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
             <div className="flex justify-between items-start mb-3">
               <span
                 className={`text-xs px-2 py-1 rounded font-medium uppercase tracking-wider
-                ${
-                  item.type === "link"
+                ${item.type === "link"
                     ? "bg-blue-900/50 text-blue-400"
                     : "bg-slate-700 text-slate-300"
-                }
+                  }
               `}
               >
                 {item.type}
@@ -155,9 +287,21 @@ const Stash: React.FC<StashProps> = ({ user, items, setItems }) => {
             </div>
           </div>
         ))}
-        {items.length === 0 && (
+        {filteredItems.length === 0 && (
           <div className="col-span-full py-12 text-center border-2 border-dashed border-slate-800 rounded-xl text-slate-600">
-            <p>The vault is empty.</p>
+            {selectedTags.length > 0 ? (
+              <>
+                <p className="mb-2">No items match the selected tags.</p>
+                <button
+                  onClick={clearFilters}
+                  className="text-amber-400 hover:text-amber-300 text-sm underline"
+                >
+                  Clear filters
+                </button>
+              </>
+            ) : (
+              <p>The vault is empty.</p>
+            )}
           </div>
         )}
       </div>
