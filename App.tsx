@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { UserProfile, TodoList, StashItem, Goal, JournalEntry } from './src/shared/types';
 import { signInWithGoogle, logOut, onAuthStateChange } from './src/shared/services/auth';
@@ -10,12 +10,14 @@ import { getJournalEntries } from './src/features/journal/services/journalServic
 import { useTheme } from './src/shared/ThemeContext';
 import { AppLayout } from './src/shared/components/AppLayout';
 import LandingPage from './src/shared/components/LandingPage';
-import Dashboard from './src/shared/components/Dashboard';
-import Checkmate from './src/features/checkmate/components/Checkmate';
-import Stash from './src/features/stash/components/Stash';
-import Focus from './src/features/focus/components/Focus';
-import Goals from './src/features/goals/components/Goals';
-import Journal from './src/features/journal/components/Journal';
+
+// Lazy load feature components for better performance
+const Dashboard = React.lazy(() => import('./src/shared/components/Dashboard'));
+const Checkmate = React.lazy(() => import('./src/features/checkmate/components/Checkmate'));
+const Stash = React.lazy(() => import('./src/features/stash/components/Stash'));
+const Focus = React.lazy(() => import('./src/features/focus/components/Focus'));
+const Goals = React.lazy(() => import('./src/features/goals/components/Goals'));
+const Journal = React.lazy(() => import('./src/features/journal/components/Journal'));
 
 // Protected Route wrapper component
 const ProtectedRoute: React.FC<{ user: UserProfile | null; children: React.ReactNode }> = ({ user, children }) => {
@@ -89,82 +91,91 @@ const App: React.FC = () => {
   }, [user]);
 
   return (
-    <Routes>
-      {/* Public Route */}
-      <Route
-        path="/"
-        element={
-          user ? <Navigate to="/dashboard" replace /> : <LandingPage onLogin={handleLogin} isLoading={isLoading} />
-        }
-      />
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-violet-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-slate-400">Loading...</p>
+        </div>
+      </div>
+    }>
+      <Routes>
+        {/* Public Route */}
+        <Route
+          path="/"
+          element={
+            user ? <Navigate to="/dashboard" replace /> : <LandingPage onLogin={handleLogin} isLoading={isLoading} />
+          }
+        />
 
-      {/* Protected Routes */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute user={user}>
-            <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
-              <Dashboard user={user!} todoLists={todoLists} stashItems={stashItems} goals={goals} journalEntries={journalEntries} productivityTip={productivityTip} />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
+        {/* Protected Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute user={user}>
+              <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
+                <Dashboard user={user!} todoLists={todoLists} stashItems={stashItems} goals={goals} journalEntries={journalEntries} productivityTip={productivityTip} />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/goals"
-        element={
-          <ProtectedRoute user={user}>
-            <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
-              <Goals user={user!} goals={goals} setGoals={setGoals} />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/goals"
+          element={
+            <ProtectedRoute user={user}>
+              <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
+                <Goals user={user!} goals={goals} setGoals={setGoals} />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/checkmate"
-        element={
-          <ProtectedRoute user={user}>
-            <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
-              <Checkmate user={user!} todoLists={todoLists} setTodoLists={setTodoLists} />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/checkmate"
+          element={
+            <ProtectedRoute user={user}>
+              <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
+                <Checkmate user={user!} todoLists={todoLists} setTodoLists={setTodoLists} />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/focus"
-        element={
-          <ProtectedRoute user={user}>
-            <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
-              <Focus user={user!} todoLists={todoLists} />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/focus"
+          element={
+            <ProtectedRoute user={user}>
+              <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
+                <Focus user={user!} todoLists={todoLists} />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/stash"
-        element={
-          <ProtectedRoute user={user}>
-            <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
-              <Stash user={user!} items={stashItems} setItems={setStashItems} />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/stash"
+          element={
+            <ProtectedRoute user={user}>
+              <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
+                <Stash user={user!} items={stashItems} setItems={setStashItems} />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/journal"
-        element={
-          <ProtectedRoute user={user}>
-            <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
-              <Journal user={user!} entries={journalEntries} setEntries={setJournalEntries} />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-    </Routes>
+        <Route
+          path="/journal"
+          element={
+            <ProtectedRoute user={user}>
+              <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
+                <Journal user={user!} entries={journalEntries} setEntries={setJournalEntries} />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Suspense>
   );
 };
 
