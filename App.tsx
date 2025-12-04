@@ -9,6 +9,7 @@ import { getGoals } from './src/features/goals/services/goalsService';
 import { getJournalEntries } from './src/features/journal/services/journalService';
 import { useTheme } from './src/shared/ThemeContext';
 import { AppLayout } from './src/shared/components/AppLayout';
+import { ErrorBoundary } from './src/shared/components/ErrorBoundary';
 import LandingPage from './src/shared/components/LandingPage';
 
 // Lazy load feature components for better performance
@@ -114,7 +115,9 @@ const App: React.FC = () => {
           element={
             <ProtectedRoute user={user}>
               <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
-                <Dashboard user={user!} todoLists={todoLists} stashItems={stashItems} goals={goals} journalEntries={journalEntries} productivityTip={productivityTip} />
+                <ErrorBoundary featureName="Dashboard">
+                  <Dashboard user={user!} todoLists={todoLists} stashItems={stashItems} goals={goals} journalEntries={journalEntries} productivityTip={productivityTip} />
+                </ErrorBoundary>
               </AppLayout>
             </ProtectedRoute>
           }
@@ -125,7 +128,9 @@ const App: React.FC = () => {
           element={
             <ProtectedRoute user={user}>
               <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
-                <Goals user={user!} goals={goals} setGoals={setGoals} />
+                <ErrorBoundary featureName="Goals">
+                  <Goals user={user!} goals={goals} setGoals={setGoals} />
+                </ErrorBoundary>
               </AppLayout>
             </ProtectedRoute>
           }
@@ -136,7 +141,9 @@ const App: React.FC = () => {
           element={
             <ProtectedRoute user={user}>
               <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
-                <Checkmate user={user!} todoLists={todoLists} setTodoLists={setTodoLists} />
+                <ErrorBoundary featureName="Checkmate">
+                  <Checkmate user={user!} todoLists={todoLists} setTodoLists={setTodoLists} />
+                </ErrorBoundary>
               </AppLayout>
             </ProtectedRoute>
           }
@@ -147,7 +154,9 @@ const App: React.FC = () => {
           element={
             <ProtectedRoute user={user}>
               <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
-                <Focus user={user!} todoLists={todoLists} />
+                <ErrorBoundary featureName="Focus">
+                  <Focus user={user!} todoLists={todoLists} />
+                </ErrorBoundary>
               </AppLayout>
             </ProtectedRoute>
           }
@@ -158,7 +167,9 @@ const App: React.FC = () => {
           element={
             <ProtectedRoute user={user}>
               <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
-                <Stash user={user!} items={stashItems} setItems={setStashItems} />
+                <ErrorBoundary featureName="Stash">
+                  <Stash user={user!} items={stashItems} setItems={setStashItems} />
+                </ErrorBoundary>
               </AppLayout>
             </ProtectedRoute>
           }
@@ -169,7 +180,9 @@ const App: React.FC = () => {
           element={
             <ProtectedRoute user={user}>
               <AppLayout user={user!} theme={theme} toggleTheme={toggleTheme} handleLogout={handleLogout}>
-                <Journal user={user!} entries={journalEntries} setEntries={setJournalEntries} />
+                <ErrorBoundary featureName="Journal">
+                  <Journal user={user!} entries={journalEntries} setEntries={setJournalEntries} />
+                </ErrorBoundary>
               </AppLayout>
             </ProtectedRoute>
           }

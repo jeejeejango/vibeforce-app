@@ -2,6 +2,8 @@
 
 A modular productivity SaaS application built with React, TypeScript, and Firebase.
 
+This app is built with AI Studio and Antigravity.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
