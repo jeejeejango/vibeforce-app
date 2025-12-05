@@ -120,6 +120,7 @@ const App: React.FC = () => {
                 toggleTheme={toggleTheme}
                 handleLogout={handleLogout}
                 searchData={{ goals, todoLists, journalEntries, stashItems }}
+                pageTitle="Dashboard"
               >
                 <ErrorBoundary featureName="Dashboard">
                   <Dashboard user={user!} todoLists={todoLists} stashItems={stashItems} goals={goals} journalEntries={journalEntries} productivityTip={productivityTip} />
@@ -139,6 +140,7 @@ const App: React.FC = () => {
                 toggleTheme={toggleTheme}
                 handleLogout={handleLogout}
                 searchData={{ goals, todoLists, journalEntries, stashItems }}
+                pageTitle="Goals"
               >
                 <ErrorBoundary featureName="Goals">
                   <Goals user={user!} goals={goals} setGoals={setGoals} />
@@ -158,6 +160,7 @@ const App: React.FC = () => {
                 toggleTheme={toggleTheme}
                 handleLogout={handleLogout}
                 searchData={{ goals, todoLists, journalEntries, stashItems }}
+                pageTitle="Checkmate"
               >
                 <ErrorBoundary featureName="Checkmate">
                   <Checkmate user={user!} todoLists={todoLists} setTodoLists={setTodoLists} />
@@ -177,6 +180,7 @@ const App: React.FC = () => {
                 toggleTheme={toggleTheme}
                 handleLogout={handleLogout}
                 searchData={{ goals, todoLists, journalEntries, stashItems }}
+                pageTitle="Focus"
               >
                 <ErrorBoundary featureName="Focus">
                   <Focus user={user!} todoLists={todoLists} />
@@ -196,6 +200,7 @@ const App: React.FC = () => {
                 toggleTheme={toggleTheme}
                 handleLogout={handleLogout}
                 searchData={{ goals, todoLists, journalEntries, stashItems }}
+                pageTitle="Stash"
               >
                 <ErrorBoundary featureName="Stash">
                   <Stash user={user!} items={stashItems} setItems={setStashItems} />
@@ -215,6 +220,7 @@ const App: React.FC = () => {
                 toggleTheme={toggleTheme}
                 handleLogout={handleLogout}
                 searchData={{ goals, todoLists, journalEntries, stashItems }}
+                pageTitle="Journal"
               >
                 <ErrorBoundary featureName="Journal">
                   <Journal user={user!} entries={journalEntries} setEntries={setJournalEntries} />

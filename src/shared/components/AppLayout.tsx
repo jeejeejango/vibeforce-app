@@ -11,6 +11,7 @@ interface AppLayoutProps {
   handleLogout: () => void;
   children: React.ReactNode;
   searchData: SearchData;
+  pageTitle?: string;
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({
@@ -20,6 +21,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   handleLogout,
   children,
   searchData,
+  pageTitle,
 }) => {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
@@ -28,6 +30,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const [searchFilter, setSearchFilter] = React.useState('all');
 
   const searchResults = useSearch(searchData, searchQuery, searchFilter);
+
+  // Update document title
+  useEffect(() => {
+    document.title = pageTitle ? `${pageTitle} | VibeForce` : 'VibeForce';
+  }, [pageTitle]);
 
   // Keyboard shortcut for search (Cmd/Ctrl + K)
   useEffect(() => {
@@ -219,21 +226,29 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         <header
           className={`sticky top-0 z-10 backdrop-blur-md border-b px-6 py-4 flex justify-between items-center ${theme === 'light' ? 'bg-white/80 border-gray-200' : 'bg-slate-950/80 border-slate-800'}`}
         >
-          <span className="font-bold text-lg lg:hidden">VibeForce</span>
+          <span className="font-bold text-lg lg:hidden">{pageTitle || 'VibeForce'}</span>
 
           {/* Search Button */}
           <button
             onClick={() => setIsSearchOpen(true)}
-            className={`ml-auto px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${theme === 'light'
-              ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-              : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
-              }`}
+            className={`ml-auto px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
+              theme === 'light'
+                ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+            }`}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
             </svg>
             <span className="hidden md:inline">Search</span>
-            <kbd className="hidden md:inline px-1.5 py-0.5 text-xs rounded bg-gray-200 dark:bg-slate-700">⌘K</kbd>
+            <kbd className="hidden md:inline px-1.5 py-0.5 text-xs rounded bg-gray-200 dark:bg-slate-700">
+              ⌘K
+            </kbd>
           </button>
         </header>
 
