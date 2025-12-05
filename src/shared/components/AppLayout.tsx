@@ -28,6 +28,15 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchFilter, setSearchFilter] = React.useState('all');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(() => {
+    const saved = localStorage.getItem('sidebarCollapsed');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+    localStorage.setItem('sidebarCollapsed', JSON.stringify(!isSidebarCollapsed));
+  };
 
   const searchResults = useSearch(searchData, searchQuery, searchFilter);
 
@@ -55,11 +64,35 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     >
       {/* Sidebar Navigation */}
       <aside
-        className={`w-20 lg:w-64 border-r flex flex-col fixed h-full z-20 transition-all duration-300 ${theme === 'light' ? 'bg-white border-gray-200' : 'bg-slate-900 border-slate-800'}`}
+        className={`${isSidebarCollapsed ? 'w-20' : 'w-64'} border-r flex flex-col fixed h-full z-20 transition-all duration-300 ${theme === 'light' ? 'bg-white border-gray-200' : 'bg-slate-900 border-slate-800'}`}
       >
-        <div className="p-6 flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-tr from-violet-500 to-fuchsia-500 rounded-lg flex-shrink-0"></div>
-          <span className="font-bold text-xl tracking-tight hidden lg:block">VibeForce</span>
+        <div
+          className={`p-6 flex items-center ${isSidebarCollapsed ? 'justify-center' : 'justify-between'}`}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-gradient-to-tr from-violet-500 to-fuchsia-500 rounded-lg flex-shrink-0"></div>
+            {!isSidebarCollapsed && (
+              <span className="font-bold text-xl tracking-tight">VibeForce</span>
+            )}
+          </div>
+          {!isSidebarCollapsed && (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleSidebar}
+                className={`p-1 rounded-lg lg:hidden ${theme === 'light' ? 'hover:bg-gray-100 text-gray-500' : 'hover:bg-slate-800 text-slate-400'}`}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  ></path>
+                </svg>
+              </button>
+              <div className="w-8 h-8 hidden lg:block"></div>
+            </div>
+          )}
         </div>
 
         <nav className="flex-1 px-4 py-6 space-y-2">
@@ -75,7 +108,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                 d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
               ></path>
             </svg>
-            <span className="hidden lg:block font-medium">Dashboard</span>
+            {!isSidebarCollapsed && <span className="font-medium">Dashboard</span>}
           </Link>
 
           <Link
@@ -90,7 +123,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                 d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
               ></path>
             </svg>
-            <span className="hidden lg:block font-medium">Goals</span>
+            {!isSidebarCollapsed && <span className="font-medium">Goals</span>}
           </Link>
 
           <Link
@@ -105,7 +138,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               ></path>
             </svg>
-            <span className="hidden lg:block font-medium">Checkmate</span>
+            {!isSidebarCollapsed && <span className="font-medium">Checkmate</span>}
           </Link>
 
           <Link
@@ -120,7 +153,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
               ></path>
             </svg>
-            <span className="hidden lg:block font-medium">Focus</span>
+            {!isSidebarCollapsed && <span className="font-medium">Focus</span>}
           </Link>
 
           <Link
@@ -135,7 +168,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                 d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
               ></path>
             </svg>
-            <span className="hidden lg:block font-medium">Stash</span>
+            {!isSidebarCollapsed && <span className="font-medium">Stash</span>}
           </Link>
 
           <Link
@@ -150,7 +183,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                 d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
               ></path>
             </svg>
-            <span className="hidden lg:block font-medium">Journal</span>
+            {!isSidebarCollapsed && <span className="font-medium">Journal</span>}
           </Link>
         </nav>
 
@@ -182,9 +215,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                 ></path>
               </svg>
             )}
-            <span className="hidden lg:block text-sm">
-              {theme === 'light' ? 'Dark' : 'Light'} Mode
-            </span>
+            {!isSidebarCollapsed && (
+              <span className="text-sm">{theme === 'light' ? 'Dark' : 'Light'} Mode</span>
+            )}
           </button>
 
           <div className="flex items-center gap-3 mb-4 px-2">
@@ -193,14 +226,16 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
               alt="User"
               className={`w-8 h-8 rounded-full ${theme === 'light' ? 'bg-gray-200' : 'bg-slate-700'}`}
             />
-            <div className="hidden lg:block overflow-hidden">
-              <p className="text-sm font-medium truncate">{user.displayName}</p>
-              <p
-                className={`text-xs truncate ${theme === 'light' ? 'text-gray-500' : 'text-slate-500'}`}
-              >
-                {user.email}
-              </p>
-            </div>
+            {!isSidebarCollapsed && (
+              <div className="overflow-hidden">
+                <p className="text-sm font-medium truncate">{user.displayName}</p>
+                <p
+                  className={`text-xs truncate ${theme === 'light' ? 'text-gray-500' : 'text-slate-500'}`}
+                >
+                  {user.email}
+                </p>
+              </div>
+            )}
           </div>
           <button
             onClick={handleLogout}
@@ -214,18 +249,31 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                 d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
               ></path>
             </svg>
-            <span className="hidden lg:block text-sm">Sign Out</span>
+            {!isSidebarCollapsed && <span className="text-sm">Sign Out</span>}
           </button>
         </div>
       </aside>
 
       {/* Main Content Area */}
       <main
-        className={`flex-1 ml-20 lg:ml-64 relative min-h-screen ${theme === 'light' ? 'bg-gray-50' : 'bg-slate-950'}`}
+        className={`flex-1 ${isSidebarCollapsed ? 'ml-20' : 'ml-20 lg:ml-64'} relative min-h-screen transition-all duration-300 ${theme === 'light' ? 'bg-gray-50' : 'bg-slate-950'}`}
       >
         <header
-          className={`sticky top-0 z-10 backdrop-blur-md border-b px-6 py-4 flex justify-between items-center ${theme === 'light' ? 'bg-white/80 border-gray-200' : 'bg-slate-950/80 border-slate-800'}`}
+          className={`sticky top-0 z-10 backdrop-blur-md border-b px-6 py-4 flex items-center gap-4 ${theme === 'light' ? 'bg-white/80 border-gray-200' : 'bg-slate-950/80 border-slate-800'}`}
         >
+          <button
+            onClick={toggleSidebar}
+            className={`p-2 rounded-lg transition-colors ${theme === 'light' ? 'hover:bg-gray-100 text-gray-600' : 'hover:bg-slate-800 text-slate-400'}`}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          </button>
           <span className="font-bold text-lg lg:hidden">{pageTitle || 'VibeForce'}</span>
 
           {/* Search Button */}
