@@ -94,7 +94,7 @@ const Journal: React.FC<JournalProps> = ({ user, entries, setEntries }) => {
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-4 md:p-6 max-w-5xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <h1
@@ -141,7 +141,7 @@ const Journal: React.FC<JournalProps> = ({ user, entries, setEntries }) => {
               >
                 How are you feeling?
               </label>
-              <div className="flex gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                 {Object.entries(MOODS).map(([key, { emoji, label }]) => (
                   <button
                     key={key}
@@ -189,7 +189,7 @@ const Journal: React.FC<JournalProps> = ({ user, entries, setEntries }) => {
           </div>
 
           {/* Wins & Learnings */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Wins */}
             <div
               className={`rounded-xl p-6 border ${theme === 'light' ? 'bg-white border-green-200' : 'bg-slate-800 border-green-500/30'}`}

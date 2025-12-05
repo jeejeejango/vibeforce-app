@@ -171,7 +171,7 @@ const Checkmate: React.FC<CheckmateProps> = ({ user, todoLists, setTodoLists }) 
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-4 md:p-6 max-w-7xl mx-auto">
       <div className="mb-8">
         <h1
           className={`text-4xl font-bold flex items-center gap-3 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}
@@ -347,30 +347,32 @@ const Checkmate: React.FC<CheckmateProps> = ({ user, todoLists, setTodoLists }) 
               >
                 {selectedList.name}
               </h2>
-              <div className="mb-8 relative flex gap-2">
-                <input
-                  type="text"
-                  value={newTaskTitle}
-                  onChange={e => setNewTaskTitle(e.target.value)}
-                  placeholder={
-                    isGeneratingTasks
-                      ? 'Generating tasks...'
-                      : "What's your next move? Or describe tasks to generate..."
-                  }
-                  className={`flex-grow border rounded-xl p-4 pl-12 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all shadow-lg ${theme === 'light' ? 'bg-white border-gray-300 text-gray-900 shadow-gray-200' : 'bg-slate-900 border-slate-700 text-white shadow-black/20'}`}
-                  disabled={isGeneratingTasks}
-                />
-                <div
-                  className={`absolute left-4 top-1/2 -translate-y-1/2 ${theme === 'light' ? 'text-gray-400' : 'text-slate-500'}`}
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 4v16m8-8H4"
-                    ></path>
-                  </svg>
+              <div className="mb-8 flex flex-col sm:flex-row gap-2">
+                <div className="relative flex-grow">
+                  <input
+                    type="text"
+                    value={newTaskTitle}
+                    onChange={e => setNewTaskTitle(e.target.value)}
+                    placeholder={
+                      isGeneratingTasks
+                        ? 'Generating tasks...'
+                        : "What's your next move? Or describe tasks to generate..."
+                    }
+                    className={`w-full border rounded-xl p-4 pl-12 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all shadow-lg ${theme === 'light' ? 'bg-white border-gray-300 text-gray-900 shadow-gray-200' : 'bg-slate-900 border-slate-700 text-white shadow-black/20'}`}
+                    disabled={isGeneratingTasks}
+                  />
+                  <div
+                    className={`absolute left-4 top-1/2 -translate-y-1/2 ${theme === 'light' ? 'text-gray-400' : 'text-slate-500'}`}
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 4v16m8-8H4"
+                      ></path>
+                    </svg>
+                  </div>
                 </div>
                 <button
                   type="submit"
